@@ -14,7 +14,8 @@ def job():
 	user_name='chochoblock'
 	pw='password12@A'
 	help=[]
-	hotphrases=[
+	phrases = {
+	'generalphrases':[
 		'i have a bug',
 		'have a problem',
 		'need help',
@@ -29,6 +30,11 @@ def job():
 		'big issue in lol',
 		'this needs fixing',
 		'got hacked',
+		'how to install PBE',
+		'what data do riot collect',
+		'data they collect'
+		],
+	'accountphrases':[
 		'i lost my password',
 		'cant access account',
 		'cannot access account',
@@ -46,7 +52,9 @@ def job():
 		'lost my summoner name',
 		'refer a friend',
 		'transfer lol account',
-		'bought lol account',
+		'bought lol account'
+		],
+	'techphrases':[
 		'lol login issue',
 		'lol patching issue',
 		'patching issue',
@@ -55,7 +63,9 @@ def job():
 		'summoner name issue',
 		'reinstalling league',
 		'low frame rate issue',
-		'low frame rate problem',
+		'low frame rate problem'
+		],
+	'billingphrases':[
 		'want a refund',
 		'want refund',
 		'aram skin boosts',
@@ -67,7 +77,9 @@ def job():
 		'store error',
 		'session expired',
 		'store is blank',
-		'i have encountered an error',
+		'i have encountered an error'
+		],
+	'gameplayphrases':[
 		'friend discovery',
 		'champion guides',
 		'party rewards',
@@ -75,12 +87,17 @@ def job():
 		'riots matchmaking guide',
 		'honor system faq',
 		'is there a colourblind mode',
-		'queue dodging',
-		'how to install PBE',
-		'what data do riot collect',
-		'data they collect',
-		'test'
-		]
+		'queue dodging'
+	]}
+	 
+	responses = {
+		'generalphrases': 'Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
+		'accountphrases': 'You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200137684)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
+		'techphrases': 'You should try their technical support website for an answer:\n\n(https://support.riotgames.com/hc/en-us/categories/200137704)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
+		'billingphrases': 'Billing issues are the worst! You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200137694)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
+		'gameplayphrases': 'Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200134550)\n\n for support topics that may help\n\n _____ \n\n I am still in development!'
+	}
+	
 
 	# don't post here for now(testing)
 	banned=[
@@ -107,32 +124,35 @@ def job():
 			posts_replied_to = posts_replied_to.split("\n")
 			posts_replied_to = filter(None, posts_replied_to)
 
-	# Get the top 5 values from our subreddit, change this to leagueoflegends to run it there
+	# Get the top 15 values from our subreddit, change this to leagueoflegends to run it there
 	subr=r.get_subreddit('test')
 	for submission in subr.get_hot(limit=15):
 		# If we haven't replied to this post before and it is not in our banned list
 		if submission.id not in posts_replied_to and subr not in banned:
 			submissionall = submission.title + ' ' + submission.selftext
 			# Do a case insensitive search
-			for phrase in hotphrases:
-				if re.search(phrase, submissionall, re.IGNORECASE):
-					# Reply to the post
-					submission.add_comment('Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com)\n\n for support topics that may help\n\n _____ \n\n I am still in development!')
-					# Store the current id into our list
-					posts_replied_to.append(submission.id)
-					print "Bot replying to : ", submission.title + ' ' + submission.id
-				
-
+			for k,v in phrases.iteritems():
+				for phrase in v:
+					if re.search(phrase, submissionall, re.IGNORECASE):
+						if phrase in v:
+							submission.add_comment(responses[k])
+							# Store the current id into our list
+							posts_replied_to.append(submission.id)
+							print "Bot replying to : ", submission.title + ' ' + submission.id
+							# exists the loop
+							break
+						
 	# Write our updated list back to the file
+	print('posted to txt')
 	with open("posts_replied_to.txt", "w") as f:
 		for post_id in posts_replied_to:
 			f.write(post_id + "\n")       
 	
 #Schedule every minute to do job
-schedule.every(20).minutes.do(job)
+schedule.every(1).minutes.do(job)
 
 #Our pending sleeper
 while True:
 	schedule.run_pending()
 	print('sleeping -- '+datetime.now().strftime('%H:%M:%S'))
-	time.sleep(60)
+	time.sleep(58)
