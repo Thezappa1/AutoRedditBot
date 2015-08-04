@@ -22,12 +22,6 @@ def job():
 		'lol bug',
 		'big issue',
 		'report a problem',
-		'i lost my password',
-		'cant access account',
-		'cannot access account',
-		'locked out of account',
-		'i got suspended',
-		'account is suspended',
 		'fix crash',
 		'update issues',
 		'update issue',
@@ -35,33 +29,57 @@ def job():
 		'big issue in lol',
 		'this needs fixing',
 		'got hacked',
+		'i lost my password',
+		'cant access account',
+		'cannot access account',
+		'locked out of account',
+		'i got suspended',
+		'account is suspended',
 		'account transfer help',
-		'how to recover my username',
-		'how to recover my password',
+		'recover my username',
+		'recover my password',
 		'odd email from riot',
 		'suspended from lol boards',
 		'account got hacked',
 		'account hacked',
 		'account got deleted',
-		'change my summoner name',
+		'lost my summoner name',
+		'refer a friend',
 		'transfer lol account',
 		'bought lol account',
 		'lol login issue',
 		'lol patching issue',
+		'patching issue',
 		'lol sound issues',
 		'friend list missing',
 		'summoner name issue',
 		'reinstalling league',
+		'low frame rate issue',
+		'low frame rate problem',
+		'want a refund',
 		'want refund',
+		'aram skin boosts',
+		'lol payment methods',
 		'chargebacks',
+		'credit card fraud',
 		'stolen lol account',
 		'lol account stolen',
 		'store error',
 		'session expired',
 		'store is blank',
 		'i have encountered an error',
+		'friend discovery',
+		'champion guides',
+		'party rewards',
+		'ranked player faq',
+		'riots matchmaking guide',
+		'honor system faq',
+		'is there a colourblind mode',
 		'queue dodging',
-		'how to install PBE'
+		'how to install PBE',
+		'what data do riot collect',
+		'data they collect',
+		'test'
 		]
 
 	# don't post here for now(testing)
@@ -91,36 +109,30 @@ def job():
 
 	# Get the top 5 values from our subreddit, change this to leagueoflegends to run it there
 	subr=r.get_subreddit('test')
-	for submission in subr.get_hot(limit=10):
+	for submission in subr.get_hot(limit=15):
 		# If we haven't replied to this post before and it is not in our banned list
 		if submission.id not in posts_replied_to and subr not in banned:
-
+			submissionall = submission.title + ' ' + submission.selftext
 			# Do a case insensitive search
 			for phrase in hotphrases:
-				if re.search(phrase, submission.title, re.IGNORECASE):
+				if re.search(phrase, submissionall, re.IGNORECASE):
 					# Reply to the post
 					submission.add_comment('Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com)\n\n for support topics that may help\n\n _____ \n\n I am still in development!')
 					# Store the current id into our list
 					posts_replied_to.append(submission.id)
 					print "Bot replying to : ", submission.title + ' ' + submission.id
-				if re.search(phrase, submission.selftext, re.IGNORECASE):
-					# Reply to the post
-					submission.add_comment('Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com)\n\n for support topics that may help\n\n _____ \n\n I am still in development!')
-					# Store the current id into our list
-					posts_replied_to.append(submission.id)
-					print "Bot replying to : ", submission.title + ' ' + submission.id
+				
 
 	# Write our updated list back to the file
-	print('posted to txt')
 	with open("posts_replied_to.txt", "w") as f:
 		for post_id in posts_replied_to:
 			f.write(post_id + "\n")       
 	
 #Schedule every minute to do job
-schedule.every(1).minutes.do(job)
+schedule.every(20).minutes.do(job)
 
 #Our pending sleeper
 while True:
 	schedule.run_pending()
 	print('sleeping -- '+datetime.now().strftime('%H:%M:%S'))
-	time.sleep(58)
+	time.sleep(60)
