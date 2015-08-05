@@ -52,7 +52,9 @@ def job():
 		'lost my summoner name',
 		'refer a friend',
 		'transfer lol account',
-		'bought lol account'
+		'bought lol account',
+		'stolen lol account',
+		'lol account stolen'
 		],
 	'techphrases':[
 		'lol login issue',
@@ -71,9 +73,8 @@ def job():
 		'aram skin boosts',
 		'lol payment methods',
 		'chargebacks',
+		'charge backs',
 		'credit card fraud',
-		'stolen lol account',
-		'lol account stolen',
 		'store error',
 		'session expired',
 		'store is blank',
@@ -91,11 +92,11 @@ def job():
 	]}
 	 
 	responses = {
-		'generalphrases': 'Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
-		'accountphrases': 'You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200137684)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
-		'techphrases': 'You should try their technical support website for an answer:\n\n(https://support.riotgames.com/hc/en-us/categories/200137704)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
-		'billingphrases': 'Billing issues are the worst! You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200137694)\n\n for support topics that may help\n\n _____ \n\n I am still in development!',
-		'gameplayphrases': 'Sorry you are experiencing a problem! You should try their website:\n\n(https://support.riotgames.com/hc/en-us/categories/200134550)\n\n for support topics that may help\n\n _____ \n\n I am still in development!'
+		'generalphrases': 'Sorry you are experiencing a problem. You can visit the link below to see if there are any knowledge base articles that may help. If you cannot find the answer you need please submit a ticket through the support portal. \n\n(https://support.riotgames.com/hc/en-us/requests/new) \n\n _____ \n\n Are you satisfied with your care? ~ Baymax \n\n I am still in development!',
+		'accountphrases': 'Sorry to hear that you are experiencing issues accessing this account. Below is a link to their Account Recovery knowledge base articles. You can also submit a ticket through the support portal.\n\n (https://support.riotgames.com/hc/en-us/categories/200137684) \n\n _____ \n\n Are you satisfied with your care? ~ Baymax \n\n I am still in development!',
+		'techphrases': ' You can visit Riot Game\'s support by following the link below. Heimerdinger frequently tinkers away and updates the knowledge base.; you can also open a ticket from the support portal if need be.\n\n(https://support.riotgames.com/hc/en-us/categories/200137704) \n\n _____ \n\n Are you satisfied with your care? ~ Baymax \n\n I am still in development!',
+		'billingphrases': 'Sorry to hear that you are experiencing issues related to billing. Below is a link to the billing knowledge base article.; you should be able to find the article you need. If you can\'t please open a support ticket! \n\n(https://support.riotgames.com/hc/en-us/categories/200137694) \n\n _____ \n\n Are you satisfied with your care? ~ Baymax \n\n I am still in development!',
+		'gameplayphrases': 'Ahhh so you are the one Zilean told me about. The chosen one who wishes to learn more. The following link will lead you to a vast trove of knowledge. If you are unable to find what you seek there please submit a ticket through the support portal.\n\n(https://support.riotgames.com/hc/en-us/categories/200134550) \n\n _____ \n\n Are you satisfied with your care? ~ Baymax \n\n I am still in development!'
 	}
 	
 
@@ -130,7 +131,7 @@ def job():
 		# If we haven't replied to this post before and it is not in our banned list
 		if submission.id not in posts_replied_to and subr not in banned:
 			submissionall = submission.title + ' ' + submission.selftext
-			# Do a case insensitive search
+			# Do a case insensitive search and look through our dictionary 
 			for k,v in phrases.iteritems():
 				for phrase in v:
 					if re.search(phrase, submissionall, re.IGNORECASE):
@@ -143,16 +144,15 @@ def job():
 							break
 						
 	# Write our updated list back to the file
-	print('posted to txt')
 	with open("posts_replied_to.txt", "w") as f:
 		for post_id in posts_replied_to:
 			f.write(post_id + "\n")       
 	
-#Schedule every minute to do job
-schedule.every(1).minutes.do(job)
+#Schedule every 20 minutea to do job, change this to make it more or less.
+schedule.every(20).minutes.do(job)
 
 #Our pending sleeper
 while True:
 	schedule.run_pending()
 	print('sleeping -- '+datetime.now().strftime('%H:%M:%S'))
-	time.sleep(58)
+	time.sleep(60)
