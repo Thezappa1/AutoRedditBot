@@ -12,7 +12,7 @@ from datetime import datetime
 def job():
 	# Set up
 	user_name='chochoblock'
-	pw='password12@A'
+	pw='password'
 	help=[]
 	phrases = {
 	'generalphrases':[
